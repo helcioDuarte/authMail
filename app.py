@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-from classifier_service import getClassificationAndSuggestion
+from classifierService import getClassificationAndSuggestion
 
 app = Flask(__name__)
 
@@ -9,8 +9,7 @@ def home():
 
 @app.route('/classify', methods=['POST'])
 def classifyEmail():
-    data = request.get-json()
-    
+    data = request.get_json()
     sender = data.get('sender', '')
     subject = data.get('subject', '')
     body = data.get('body', '')
@@ -21,17 +20,6 @@ def classifyEmail():
 
     try:
         result = getClassificationAndSuggestion(body, triggers)
-        
-        # save full email class to client side
-        emailEntry = {
-            "sender": sender,
-            "subject": subject,
-            "classification": result['classification'],
-            "suggestedResponse": result['suggested_response'],
-            "cleaned_text": result['cleaned_text']
-        }
-        classifiedEmails.append(emailEntry)
-        print(f"Total de emails classificados na sessão: {len(classifiedEmails)}")
         
         return jsonify(result)
         

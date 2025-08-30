@@ -44,6 +44,69 @@ function initClassifyPage() {
     const resultsDiv = document.getElementById('results');
     const classificationSpan = document.getElementById('result-classification');
     const responseP = document.getElementById('result-response');
+    const fileInput = document.getElementById('file-input');
+    const fileNameDisplay = document.getElementById('file-name-display');
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            fileNameDisplay.textContent = fileInput.files[0].name;
+        } else {
+            fileNameDisplay.textContent = 'Nenhum arquivo selecionado';
+        }
+    });
+
+    async function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        senderInput.value = '';
+        subjectInput.value = '';
+        emailInput.value = 'Lendo arquivo...';
+
+        if (file.type === "text/plain") {
+            const text = await file.text();
+            emailInput.value = text;
+        } 
+        else if (file.type === "application/json") {
+            const text = await file.text();
+            try {
+                const jsonData = JSON.parse(text);
+                senderInput.value = jsonData.from || '';
+                subjectInput.value = jsonData.subject || '';
+                emailInput.value = jsonData.body?.parts?.content || '';
+            } catch (e) {
+                emailInput.value = "Erro: O arquivo JSON não é válido.";
+                console.error("Erro ao parsear JSON:", e);
+            }
+        } 
+        else if (file.type === "application/pdf") {
+            const { pdfjsLib } = globalThis;
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.mjs';
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const pdf = await pdfjsLib.getDocument({ data: e.target.result }).promise;
+                    let fullText = '';
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        const page = await pdf.getPage(i);
+                        const textContent = await page.getTextContent();
+                        fullText += textContent.items.map(item => item.str).join(' ');
+                        fullText += '\n'; 
+                    }
+                    emailInput.value = fullText;
+                } catch (err) {
+                    emailInput.value = `Erro ao ler o PDF: ${err.message}`;
+                    console.error("Erro ao processar PDF:", err);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        } else {
+            emailInput.value = "Formato de arquivo não suportado.";
+        }
+    }
+
+    fileInput.addEventListener('change', handleFileSelect);
 
     classifyBtn.addEventListener('click', async () => {
         const sender = senderInput.value;
@@ -99,11 +162,6 @@ function initTriggersPage() {
     const saveTriggerBtn = document.getElementById('save-trigger-btn');
     const closeModalBtn = document.getElementById('close-modal-btn');
     const deleteTriggerBtn = document.getElementById('delete-trigger-btn');
-    const nameInput = document.getElementById('name-input');
-    const priorityInput = document.getElementById('priority-input');
-    const keywordsInput = document.getElementById('keywords-input');
-    const responseInput = document.getElementById('response-input');
-
 
     let currentlyEditingIndex = null;
 
@@ -127,16 +185,26 @@ function initTriggersPage() {
     }
     
     saveTriggerBtn.addEventListener('click', () => {
-      const newName = document.getElementById('edit-name-input').value.trim();
-      const newPrio = parseInt(document.getElementById('edit-priority-input').value, 10) || 99;
-      if (!newName || !newPrio) {
-            alert('O nome do trigger e a prioridade são obrigatórios.');
+        const newName = document.getElementById('edit-name-input').value.trim();
+        const newPriority = parseInt(document.getElementById('edit-priority-input').value, 10);
+
+        if (!newName || !document.getElementById('edit-priority-input').value.trim()) {
+            alert('O nome e a prioridade do trigger são obrigatórios.');
+            return;
+        }
+
+        const priorityExists = customTriggers.some(
+            (trigger, index) => trigger.priority === newPriority && index !== currentlyEditingIndex
+        );
+
+        if (priorityExists) {
+            alert('Erro: Esta prioridade já está em uso por outro trigger.');
             return;
         }
 
         const updatedTrigger = {
             name: newName,
-            priority: newPrio,
+            priority: newPriority,
             keywords: document.getElementById('edit-keywords-input').value.split(',').map(k => k.trim().toLowerCase()),
             response: document.getElementById('edit-response-input').value
         };
@@ -154,31 +222,53 @@ function initTriggersPage() {
     });
 
     closeModalBtn.addEventListener('click', closeEditModal);
+
     addTriggerBtn.addEventListener('click', () => {
-      const name = nameInput.value.trim();
-      const priority = parseInt(priorityInput.value, 10) || 99;
-      const keywordsString = keywordsInput.value.trim();
-      const responseString = responseInput.value.trim();
+        const nameInput = document.getElementById('name-input');
+        const priorityInput = document.getElementById('priority-input');
+        const keywordsInput = document.getElementById('keywords-input');
+        const responseInput = document.getElementById('response-input');
+        const successMessage = document.getElementById('success-message');
 
-      if (!name) {
-          alert('O nome do trigger é obrigatório.');
-          return;
-      }
-      if (!keywordsString || !responseString) {
-          alert('Preencha os campos de keywords e resposta.');
-          return;
-      }
+        const name = nameInput.value.trim();
+        const priority = parseInt(priorityInput.value, 10);
 
-      const keywordsList = keywordsString.split(',').map(k => k.trim().toLowerCase());
-      
-      addTrigger({ "name": name, "priority": priority, "keywords": keywordsList, "response": responseString });
+        if (!name || !priorityInput.value.trim()) {
+            alert('O nome e a prioridade do trigger são obrigatórios.');
+            return;
+        }
 
-      nameInput.value = '';
-      priorityInput.value = '';
-      keywordsInput.value = '';
-      responseInput.value = '';
-      
-      renderTriggers(triggerListUl, customTriggers, openEditModal);
+        const priorityExists = customTriggers.some(trigger => trigger.priority === priority);
+
+        if (priorityExists) {
+            alert('Erro: Esta prioridade já está em uso. Por favor, escolha um número diferente.');
+            return;
+        }
+
+        const keywordsString = keywordsInput.value.trim();
+        const responseString = responseInput.value.trim();
+
+        if (!keywordsString || !responseString) {
+            alert('Preencha os campos de keywords e resposta.');
+            return;
+        }
+
+        const keywordsList = keywordsString.split(',').map(k => k.trim().toLowerCase());
+        addTrigger({ "name": name, "priority": priority, "keywords": keywordsList, "response": responseString });
+
+        nameInput.value = '';
+        priorityInput.value = '';
+        keywordsInput.value = '';
+        responseInput.value = '';
+        
+        renderTriggers(triggerListUl, customTriggers, openEditModal);
+        
+        successMessage.textContent = 'Trigger adicionado com sucesso!';
+        successMessage.classList.remove('hidden');
+
+        setTimeout(() => {
+            successMessage.classList.add('hidden');
+        }, 3000);
     });
     
     renderTriggers(triggerListUl, customTriggers, openEditModal);

@@ -32,8 +32,9 @@ def suggestProductiveResponse(emailText, triggers):
     triggers.sort(key=lambda trigger: trigger.get('priority', 99))
 
     for trigger in triggers:
-        if trigger["keyword"].lower() in lowerText:
-            return trigger["response"]
+        for keyword in trigger["keywords"]:
+            if keyword.lower() in lowerText:
+                return trigger["response"]
 
     return "Recebido. A equipe já está ciente e daremos andamento à sua solicitação."
 
@@ -49,8 +50,9 @@ def getClassificationAndSuggestion(rawText, triggers):
             'suggested_response': 'Recebido.',
             'cleaned_text': ''
         }
-        
-    result = classifier(cleanText)[0]
+
+    result = classifier(cleanText, truncation=True, max_length=512)[0]
+
     classification = result['label']
     
     suggestion = ""
