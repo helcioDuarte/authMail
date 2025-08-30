@@ -1,13 +1,13 @@
-import { customTriggers, classificationHistory, addTrigger, addHistoryItem, updateTrigger, deleteTrigger } from './state.js';
+import { customTriggers, classificationHistory, addTrigger, addHistoryItem, updateTrigger, deleteTrigger, updateHistoryItemClassification, deleteHistoryItem} from './state.js';
 import { renderTriggers, renderHistory } from './ui.js';
 import { classifyEmail } from './api.js';
 
 function navigateTo(templateId) {
-    const mainContent = document.getElementById('main-content');
+    const mainContent = document.getElementById('main-content'); 
     const template = document.getElementById(templateId);
-    const classbtn = document.getElementById("travel-classify")
-    const trigbtn = document.getElementById("travel-triggers")
-    const histbtn = document.getElementById("travel-history")
+    const classbtn = document.getElementById("travel-classify");
+    const trigbtn = document.getElementById("travel-triggers");
+    const histbtn = document.getElementById("travel-history");
     if (!template) return;
 
     mainContent.innerHTML = '';
@@ -16,19 +16,22 @@ function navigateTo(templateId) {
 
     if (templateId === 'template-classify') {
         initClassifyPage();
-        classbtn.classList.add("border-emerald-500", "border")
-        trigbtn.classList.remove("border-emerald-500", "border")
-        histbtn.classList.remove("border-emerald-500", "border")
+        classbtn.classList.add("border-emerald-500", "border");
+        classbtn.classList.remove("shadow-sm");
+        trigbtn.classList.remove("border-emerald-500", "border");
+        histbtn.classList.remove("border-emerald-500", "border");
     } else if (templateId === 'template-triggers') {
         initTriggersPage();
-        trigbtn.classList.add("border-emerald-500", "border")
-        classbtn.classList.remove("border-emerald-500", "border")
-        histbtn.classList.remove("border-emerald-500", "border")
+        trigbtn.classList.add("border-emerald-500", "border");
+        trigbtn.classList.remove("shadow-sm");
+        classbtn.classList.remove("border-emerald-500", "border");
+        histbtn.classList.remove("border-emerald-500", "border");
     } else if (templateId === 'template-history') {
         initHistoryPage();
-        histbtn.classList.add("border-emerald-500", "border")
-        classbtn.classList.remove("border-emerald-500", "border")
-        trigbtn.classList.remove("border-emerald-500", "border")
+        histbtn.classList.add("border-emerald-500", "border");
+        histbtn.classList.remove("shadow-sm");
+        classbtn.classList.remove("border-emerald-500", "border");
+        trigbtn.classList.remove("border-emerald-500", "border");
     }
 }
 
@@ -96,13 +99,19 @@ function initTriggersPage() {
     const saveTriggerBtn = document.getElementById('save-trigger-btn');
     const closeModalBtn = document.getElementById('close-modal-btn');
     const deleteTriggerBtn = document.getElementById('delete-trigger-btn');
-    
+    const nameInput = document.getElementById('name-input');
+    const priorityInput = document.getElementById('priority-input');
+    const keywordsInput = document.getElementById('keywords-input');
+    const responseInput = document.getElementById('response-input');
+
+
     let currentlyEditingIndex = null;
 
     function openEditModal(index) {
         currentlyEditingIndex = index;
         const trigger = customTriggers[index];
 
+        document.getElementById('edit-name-input').value = trigger.name;
         document.getElementById('edit-priority-input').value = trigger.priority;
         document.getElementById('edit-keywords-input').value = trigger.keywords.join(', ');
         document.getElementById('edit-response-input').value = trigger.response;
@@ -118,8 +127,16 @@ function initTriggersPage() {
     }
     
     saveTriggerBtn.addEventListener('click', () => {
+      const newName = document.getElementById('edit-name-input').value.trim();
+      const newPrio = parseInt(document.getElementById('edit-priority-input').value, 10) || 99;
+      if (!newName || !newPrio) {
+            alert('O nome do trigger e a prioridade são obrigatórios.');
+            return;
+        }
+
         const updatedTrigger = {
-            priority: parseInt(document.getElementById('edit-priority-input').value, 10) || 99,
+            name: newName,
+            priority: newPrio,
             keywords: document.getElementById('edit-keywords-input').value.split(',').map(k => k.trim().toLowerCase()),
             response: document.getElementById('edit-response-input').value
         };
@@ -137,20 +154,84 @@ function initTriggersPage() {
     });
 
     closeModalBtn.addEventListener('click', closeEditModal);
-    
-    // Lógica para adicionar novo trigger
     addTriggerBtn.addEventListener('click', () => {
-        // ... (código para adicionar trigger continua o mesmo)
-        renderTriggers(triggerListUl, customTriggers, openEditModal);
+      const name = nameInput.value.trim();
+      const priority = parseInt(priorityInput.value, 10) || 99;
+      const keywordsString = keywordsInput.value.trim();
+      const responseString = responseInput.value.trim();
+
+      if (!name) {
+          alert('O nome do trigger é obrigatório.');
+          return;
+      }
+      if (!keywordsString || !responseString) {
+          alert('Preencha os campos de keywords e resposta.');
+          return;
+      }
+
+      const keywordsList = keywordsString.split(',').map(k => k.trim().toLowerCase());
+      
+      addTrigger({ "name": name, "priority": priority, "keywords": keywordsList, "response": responseString });
+
+      nameInput.value = '';
+      priorityInput.value = '';
+      keywordsInput.value = '';
+      responseInput.value = '';
+      
+      renderTriggers(triggerListUl, customTriggers, openEditModal);
     });
     
-    // Renderiza a lista inicial passando a função de abrir o modal
     renderTriggers(triggerListUl, customTriggers, openEditModal);
 }
 
+
 function initHistoryPage() {
     const historyListUl = document.getElementById('history-list');
-    renderHistory(historyListUl, classificationHistory);
+    const modalOverlay = document.getElementById('history-modal-overlay');
+    const saveBtn = document.getElementById('save-history-btn');
+    const closeBtn = document.getElementById('close-history-modal-btn');
+    const deleteBtn = document.getElementById('delete-history-btn');
+
+    let currentlyViewingIndex = null;
+
+    function openHistoryModal(index) {
+        currentlyViewingIndex = index;
+        const item = classificationHistory[index];
+
+        document.getElementById('history-sender').textContent = item.sender || "N/A";
+        document.getElementById('history-subject').textContent = item.subject || "N/A";
+        document.getElementById('history-classification-select').value = item.classification;
+        document.getElementById('history-response').textContent = item.suggested_response;
+        document.getElementById('history-cleaned-text').textContent = item.cleaned_text;
+
+        modalOverlay.classList.remove('hidden');
+        modalOverlay.classList.add('flex');
+    }
+
+    function closeHistoryModal() {
+        modalOverlay.classList.add('hidden');
+        modalOverlay.classList.remove('flex');
+        currentlyViewingIndex = null;
+    }
+
+    saveBtn.addEventListener('click', () => {
+        const newClassification = document.getElementById('history-classification-select').value;
+        updateHistoryItemClassification(currentlyViewingIndex, newClassification);
+        renderHistory(historyListUl, classificationHistory, openHistoryModal);
+        closeHistoryModal();
+    });
+
+    deleteBtn.addEventListener('click', () => {
+        if (confirm('Tem certeza que deseja remover este item do histórico?')) {
+            deleteHistoryItem(currentlyViewingIndex);
+            renderHistory(historyListUl, classificationHistory, openHistoryModal);
+            closeHistoryModal();
+        }
+    });
+
+    closeBtn.addEventListener('click', closeHistoryModal);
+
+    renderHistory(historyListUl, classificationHistory, openHistoryModal);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

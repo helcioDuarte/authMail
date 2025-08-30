@@ -7,36 +7,36 @@
   <script src="../static/js/main.js" type="module" defer></script>
   <title>Classificador de Email</title>
 </head>
-<body class="bg-gray-200 flex flex-row font-display text-shadow-sm/30">
-  <div class="h-screen w-full m-4 space-y-6">
-    <aside id="sidebar" class="w-full bg-emerald-800 text-zinc-50 p-4 mx-auto place-self-center rounded-xl">
-      <h1 class="text-2xl font-bold mb-6 place-self-center underline">AuthMail</h1>
-      <nav>
+<body class="bg-gray-200 font-display text-shadow-sm/30 m-10 lg:mx-auto flex">
+  <div class="h-full w-full max-w-7xl space-y-6 mx-auto flex flex-col lg:flex-row lg:space-x-15 lg:px-10">
+    <aside id="sidebar" class="bg-emerald-800 sticky flex flex-col text-zinc-50 p-4 md:p-8 rounded-xl grow w-full lg:max-w-[300px] lg:max-h-[325px]">
+      <h1 class="text-2xl font-bold mb-4 place-self-center underline md:mb-6">AuthMail</h1>
+      <nav class="text-sm md:text-base">
         <ul>
-          <li class="mb-4">
+          <li class="mb-2 md:mb-4">
             <button id="travel-classify" data-target-template="template-classify" class="nav-button w-full flex items-center 
             justify-between bg-emerald-900 hover:bg-emerald-950 p-2 rounded transition-transform delay-100 duration-200 
-            hover:scale-101">
+            hover:scale-101 shadow-sm">
               <span>Analisar E-mail</span>
               <svg class="h-5 w-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5">
               <use href="#icon-add"></use>
               </svg>
             </button>
           </li>
-          <li class="mb-4">
+          <li class="mb-2 md:mb-4">
             <button id="travel-triggers" data-target-template="template-triggers" class="nav-button w-full flex items-center 
             justify-between bg-emerald-900 hover:bg-emerald-950 p-2 rounded transition-transform delay-100 duration-200 
-            hover:scale-101">
+            hover:scale-101 shadow-sm">
               <span>Gerenciar Triggers</span>
               <svg class="h-5 w-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5">
               <use href="#icon-settings"></use>
               </svg>
             </button>
           </li>
-          <li>
+          <li class="mb-2 md:mb-8">
             <button id="travel-history" data-target-template="template-history" class="nav-button w-full flex items-center 
             justify-between bg-emerald-900 hover:bg-emerald-950 p-2 rounded transition-transform delay-100 duration-200 
-            hover:scale-101">
+            hover:scale-101 shadow-sm">
               <span>Histórico</span>
               <svg class="h-5 w-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5">
               <use href="#icon-history"></use>
@@ -45,45 +45,87 @@
           </li>
         </ul>
       </nav>
+      <a target="_blank" rel="noopener noreferrer" href="https://github.com/helcioDuarte">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="place-self-center cursor-pointer w-6 h-6 
+        transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:text-emerald-blue hidden lg:block">
+          <use href="#icon-github"></use>
+        </svg>
+      </a>
     </aside>
 
     <main id="main-content" class="text-shadow-2xs/30">
       </main>
   </div>
 
+<div id="history-modal-overlay" class="fixed inset-0 bg-black/60 hidden items-center justify-center">
+  <div id="history-item-modal" class="bg-white p-6 rounded-lg flex flex-col shadow-xl mx-4 text-shadow-none md:w-full md:max-w-lg">
+    <h3 class="text-xl font-bold mb-4 text-gray-800 place-self-center">Detalhes do E-mail</h3>
+    <div class="space-y-3 text-sm md:text-base max-h-96 overflow-y-auto">
+      <p><span class="font-semibold">De:</span> <span id="history-sender"></span></p>
+      <p><span class="font-semibold">Assunto:</span> <span id="history-subject"></span></p>
+      <div>
+        <label for="history-classification-select" class="font-bold">Classificação:</label>
+        <select id="history-classification-select" class="p-1 border rounded shadow-sm">
+          <option value="Produtivo">Produtivo</option>
+          <option value="Improdutivo">Improdutivo</option>
+        </select>
+      </div>
+      <p><span class="font-semibold">Resposta Sugerida:</span> <span id="history-response"></span></p>
+      <div>
+        <p class="font-bold">Texto Limpo Analisado:</p>
+        <p id="history-cleaned-text" class="mt-1 p-2 bg-gray-100 border rounded text-xs md:text-sm h-32 overflow-y-auto shadow-sm"></p>
+      </div>
+    </div>
+    <div class="mt-6 place-self-center space-x-4">
+      <button id="save-history-btn" class="bg-emerald-blue-light text-white p-2 rounded hover:bg-emerald-blue shadow-sm
+      max-w-20 text-xs md:text-sm text-center transition-transform delay-100 duration-200 hover:scale-110">Salvar</button>
+      <button id="close-history-modal-btn" class="bg-gray-300 p-2 rounded hover:bg-gray-400 max-w-20 text-xs md:text-sm 
+      text-center transition-transform delay-100 duration-200 hover:scale-110 shadow-sm">Fechar</button>
+      <button id="delete-history-btn" class="bg-red-900 text-white p-2 rounded hover:bg-emerald-red shadow-sm
+      max-w-20 text-xs md:text-sm text-center transition-transform delay-100 duration-200 hover:scale-110">Remover</button>
+    </div>
+  </div>
+</div>
+
   <div id="modal-overlay" class="fixed inset-0 bg-black/60 hidden items-center justify-center">
-    <div id="edit-trigger-modal" class="bg-white p-6 rounded-lg shadow-xl max-w- mx-4">
+    <div id="edit-trigger-modal" class="bg-white px-2 py-6 rounded-lg flex flex-col shadow-xl mx-4 text-shadow-none md:w-full md:max-w-sm">
       <h3 class="text-xl font-bold mb-4 text-gray-800 place-self-center">Editar Trigger</h3>
-      <div class="space-y-4">
-        <input type="hidden" id="edit-trigger-index">
+      <div class="space-y-4 text-sm md:text-base place-items-center-safe">
         <div class="flex flex-col">
-          <label for="edit-priority-input">Prioridade:</label>
-          <input type="number" id="edit-priority-input" class="w-40 p-2 border rounded">
+          <label for="name-input" class="font-semibold">Nome:</label>
+          <input type="text" id="edit-name-input" placeholder="Nome da sugestão (max 16 chars)" maxlength="16" 
+          class="w-40 p-2 border rounded text-xs md:text-sm shadow-sm">
         </div>
         <div class="flex flex-col">
-          <label for="edit-keywords-input">Keywords (separadas por vírgula):</label>
-          <input type="text" id="edit-keywords-input" class="w-40 p-2 border rounded">
+          <label for="edit-priority-input" class="font-semibold">Prioridade:</label>
+          <input type="number" id="edit-priority-input" class="w-40 p-2 border rounded text-xs md:text-sm shadow-sm">
         </div>
         <div class="flex flex-col">
-          <label for="edit-response-input">Resposta:</label>
-          <input type="text" id="edit-response-input" class="w-40 p-2 border rounded">
+          <label for="edit-keywords-input" class="font-semibold text-wrap">Keywords (separadas por vírgula):</label>
+          <input type="text" id="edit-keywords-input" class="w-40 p-2 border rounded text-xs md:text-sm shadow-sm place-self-center">
+        </div>
+        <div class="flex flex-col">
+          <label for="edit-response-input" class="font-semibold">Resposta:</label>
+          <input type="text" id="edit-response-input" class="w-40 p-2 border rounded text-xs md:text-sm shadow-sm">
         </div>
       </div>
-      <div class="mt-6 flex justify-between">
+      <div class="mt-6 place-self-center space-x-4">
         <button id="save-trigger-btn" class="bg-emerald-blue-light text-white p-2 rounded hover:bg-emerald-blue 
-        max-w-20 text-sm text-center transition-transform delay-100 duration-200 hover:scale-101">Salvar</button>
-        <button id="close-modal-btn" class="bg-gray-300 p-2 rounded hover:bg-gray-400 max-w-20 text-sm text-center
-        transition-transform delay-100 duration-200 hover:scale-101">Cancelar</button>
-        <button id="delete-trigger-btn" class="bg-red-900 text-white p-2 rounded hover:bg-emerald-red 
-        max-w-20 text-sm text-center transition-transform delay-100 duration-200 hover:scale-101">Excluir</button>
+        max-w-20 md:max-w-25 text-xs md:text-sm text-center transition-transform delay-50 duration-200 hover:scale-110 shadow-sm">
+        Salvar</button>
+        <button id="close-modal-btn" class="bg-gray-300 p-2 rounded hover:bg-gray-400 max-w-20 md:max-w-25 text-xs 
+        md:text-sm text-center transition-transform delay-50 duration-200 hover:scale-110 shadow-sm">
+        Cancelar</button>
+        <button id="delete-trigger-btn" class="bg-red-900 text-white p-2 rounded hover:bg-emerald-red shadow-sm
+        max-w-20 md:max-w-25 text-xs md:text-sm text-center transition-transform delay-50 duration-200 hover:scale-110">
+        Excluir</button>
       </div>
     </div>
   </div>
 
-
   <template id="template-classify">
-    <div class="w-full max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-md">
-      <h2 class="text-xl font-bold text-gray-900 mb-6 place-self-center">Analisar Novo E-mail</h2>
+    <div class="w-full lg:min-w-[648px] lg:object-fill mx-auto bg-white p-4 md:p-8 rounded-xl shadow-md">
+      <h2 class="text-lg md:text-xl font-bold text-gray-900 mb-6 place-self-center">Analisar Novo E-mail</h2>
       <div id="email-form" class="space-y-4">
         
         <div>
@@ -116,29 +158,35 @@
     </div>
   </template>
 
-
   <template id="template-triggers">
-    <div class="w-full max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-md">
-      <h2 class="text-xl font-bold text-gray-800 mb-6 place-self-center">Gerenciar Triggers</h2>
+    <div class="w-full md:max-w-3xl lg:max-w-[648px] mx-auto bg-white p-4 md:p-8 rounded-xl shadow-md">
+      <h2 class="text-lg md:text-xl font-bold text-gray-800 mb-6 place-self-center">Gerenciar Triggers</h2>
       <div id="trigger-form" class="space-y-4 mb-8">
-        <input type="number" id="priority-input" placeholder="Prioridade (ex: 1)" class="bg-gray-50 border border-gray-300 p-2 rounded w-full shadow-md">
-        <input type="text" id="keywords-input" placeholder="Keywords (separadas por vírgula)" class="bg-gray-50 border border-gray-300 p-2 rounded w-full shadow-md">
-        <input type="text" id="response-input" placeholder="Resposta associada" class="bg-gray-50 border border-gray-300 p-2 rounded w-full shadow-md">
-        <button id="add-trigger-btn" class="w-full bg-emerald-800 hover:bg-emerald-900 p-2 rounded transition-transform delay-100 duration-200 hover:scale-101 text-zinc-50 text-center">Adicionar Trigger</button>
+        <input type="text" id="name-input" placeholder="Nome (max 16 chars)" maxlength="16" class="bg-gray-50 border
+        border-gray-300 p-2 rounded w-full shadow-md">
+        <input type="number" id="priority-input" placeholder="Prioridade (ex: 1)" class="bg-gray-50 border 
+        border-gray-300 p-2 rounded w-full shadow-md">
+        <input type="text" id="keywords-input" placeholder="Keywords (separadas por vírgula)" class="bg-gray-50 border 
+        border-gray-300 p-2 rounded w-full shadow-md">
+        <input type="text" id="response-input" placeholder="Resposta associada" class="bg-gray-50 border 
+        border-gray-300 p-2 rounded w-full shadow-md">
+        <button id="add-trigger-btn" class="w-full bg-emerald-800 hover:bg-emerald-900 p-2 rounded 
+        transition-transform delay-100 duration-200 hover:scale-101 text-zinc-50 text-center">Adicionar Trigger</button>
       </div>
       <h3 class="text-lg font-bold text-gray-800 mb-4 place-self-center">Triggers Atuais:</h3>
-      <div class=" bg-gray-50 p-2 rounded-xl shadow-md border border-emerald-800 mb-4">
-        <ul id="trigger-list" class="list-disc space-y-2 "></ul>
+      <div class="p-2 rounded-xl shadow-md border border-emerald-800 mb-4 text-shadow-none">
+        <ul id="trigger-list" class="list-disc space-y-4"></ul>
       </div>
       <p class="text-sm place-self-center">A prioridade indica a ordem de ativação da sugestão.</p>
     </div>
   </template>
 
-
   <template id="template-history">
-    <div class="w-full max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">Histórico da Sessão</h2>
-      <ul id="history-list" class="list-disc pl-5 space-y-2"></ul>
+    <div class="w-full md:max-w-3xl lg:min-w-[648px] mx-auto bg-white p-4 md:p-8 rounded-lg shadow-md ">
+      <h2 class="text-lg md:text-xl font-bold text-gray-800 mb-6 place-self-center">Histórico da Sessão</h2>
+      <div class="p-2 rounded-xl shadow-md border border-emerald-800 text-shadow-none">
+        <ul id="history-list" class="space-y-4"></ul>
+      </div>
     </div>
   </template>
 
@@ -149,7 +197,15 @@
   <symbol id="icon-add" viewBox="0 0 20 20">
     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
   </symbol>
-  
+
+  <symbol id="icon-github" viewBox="0 0 16 16">
+    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 
+    0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 
+    1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 
+    0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 
+    1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
+  </symbol>
+
   <symbol id="icon-settings" viewBox="0 0 20 20">
     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 
     0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 
