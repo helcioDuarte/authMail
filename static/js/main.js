@@ -139,6 +139,11 @@ function initClassifyPage() {
             data.sender = sender;
             data.subject = subject;
             //send status to html
+            classificationSpan.classList.add(
+              ...(data.classification === 'Produtivo' 
+                ? ['text-emerald-blue', 'underline'] 
+                : ['text-emerald-red', 'underline'])
+            );
             classificationSpan.textContent = data.classification;
             responseP.textContent = data.suggested_response;
             resultsDiv.style.display = 'block';
@@ -166,22 +171,24 @@ function initTriggersPage() {
     let currentlyEditingIndex = null;
 
     function openEditModal(index) {
-        currentlyEditingIndex = index;
-        const trigger = customTriggers[index];
+    currentlyEditingIndex = index;
+    const trigger = customTriggers[index];
 
-        document.getElementById('edit-name-input').value = trigger.name;
-        document.getElementById('edit-priority-input').value = trigger.priority;
-        document.getElementById('edit-keywords-input').value = trigger.keywords.join(', ');
-        document.getElementById('edit-response-input').value = trigger.response;
-        
-        modalOverlay.classList.remove('hidden');
-        modalOverlay.classList.add('flex');
+    document.getElementById('edit-name-input').value = trigger.name;
+    document.getElementById('edit-priority-input').value = trigger.priority;
+    document.getElementById('edit-keywords-input').value = trigger.keywords.join(', ');
+    document.getElementById('edit-response-input').value = trigger.response;
+
+    modalOverlay.classList.remove('hidden');
+    modalOverlay.classList.add('flex');
+    document.body.classList.add('overflow-hidden');
     }
 
     function closeEditModal() {
-        modalOverlay.classList.add('hidden');
-        modalOverlay.classList.remove('flex');
-        currentlyEditingIndex = null;
+    modalOverlay.classList.add('hidden');
+    modalOverlay.classList.remove('flex');
+    currentlyEditingIndex = null;
+    document.body.classList.remove('overflow-hidden');
     }
     
     saveTriggerBtn.addEventListener('click', () => {
@@ -285,23 +292,25 @@ function initHistoryPage() {
     let currentlyViewingIndex = null;
 
     function openHistoryModal(index) {
-        currentlyViewingIndex = index;
-        const item = classificationHistory[index];
+    currentlyViewingIndex = index;
+    const item = classificationHistory[index];
 
-        document.getElementById('history-sender').textContent = item.sender || "N/A";
-        document.getElementById('history-subject').textContent = item.subject || "N/A";
-        document.getElementById('history-classification-select').value = item.classification;
-        document.getElementById('history-response').textContent = item.suggested_response;
-        document.getElementById('history-cleaned-text').textContent = item.cleaned_text;
+    document.getElementById('history-sender').textContent = item.sender || "N/A";
+    document.getElementById('history-subject').textContent = item.subject || "N/A";
+    document.getElementById('history-classification-select').value = item.classification;
+    document.getElementById('history-response').textContent = item.suggested_response;
+    document.getElementById('history-cleaned-text').textContent = item.cleaned_text;
 
-        modalOverlay.classList.remove('hidden');
-        modalOverlay.classList.add('flex');
+    modalOverlay.classList.remove('hidden');
+    modalOverlay.classList.add('flex');
+    document.body.classList.add('overflow-hidden');
     }
 
     function closeHistoryModal() {
-        modalOverlay.classList.add('hidden');
-        modalOverlay.classList.remove('flex');
-        currentlyViewingIndex = null;
+    modalOverlay.classList.add('hidden');
+    modalOverlay.classList.remove('flex');
+    currentlyViewingIndex = null;
+    document.body.classList.remove('overflow-hidden');
     }
 
     saveBtn.addEventListener('click', () => {
@@ -328,8 +337,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.nav-button').forEach(button => {
         button.addEventListener('click', () => {
             const templateId = button.getAttribute('data-target-template');
-            navigateTo(templateId);
+            navigateTo(templateId);  
         });
     });
-    navigateTo('template-classify');
+    navigateTo('template-classify');    
 });

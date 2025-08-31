@@ -7,4 +7,33 @@
   --color-emerald-blue-light: #005c61;
   --color-emerald-green: #006104;
   --color-emerald-red: #611803;
+  --animate-fade-in: fade-in 0.2s ease-out forwards;
+  --animate-fade-out: fade-out 0.2s ease-out forwards;
+  --animate-fade-in-start: fade-in-start 0.75s ease-out forwards;
+  --animate-fade-in-template: fade-in-template 0.25s ease-out forwards;
+
+  @keyframes fade-in-start {
+    from {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in-template {
+    from {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+
+
 }

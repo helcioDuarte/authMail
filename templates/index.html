@@ -8,58 +8,59 @@
   <script src="../static/js/main.js" type="module" defer></script>
   <title>Classificador de Email</title>
 </head>
-<body class="bg-gray-200 font-display text-shadow-sm/30 m-10 lg:mx-auto flex">
-  <div class="h-full w-full max-w-7xl space-y-6 mx-auto flex flex-col lg:flex-row lg:space-x-15 lg:px-10">
-    <aside id="sidebar" class="bg-emerald-800 sticky flex flex-col text-zinc-50 p-4 md:p-8 rounded-xl grow w-full lg:max-w-[300px] lg:max-h-[325px]">
-      <h1 class="text-2xl font-bold mb-4 place-self-center underline md:mb-6">AuthMail</h1>
-      <nav class="text-sm md:text-base">
-        <ul>
-          <li class="mb-2 md:mb-4">
-            <button id="travel-classify" data-target-template="template-classify" class="nav-button w-full flex items-center 
-            justify-between bg-emerald-900 hover:bg-emerald-950 p-2 rounded transition-transform delay-100 duration-200 
-            hover:scale-101 shadow-sm">
-              <span>Analisar E-mail</span>
-              <svg class="h-5 w-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5">
-              <use href="#icon-add"></use>
-              </svg>
-            </button>
-          </li>
-          <li class="mb-2 md:mb-4">
-            <button id="travel-triggers" data-target-template="template-triggers" class="nav-button w-full flex items-center 
-            justify-between bg-emerald-900 hover:bg-emerald-950 p-2 rounded transition-transform delay-100 duration-200 
-            hover:scale-101 shadow-sm">
-              <span>Gerenciar Triggers</span>
-              <svg class="h-5 w-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5">
-              <use href="#icon-settings"></use>
-              </svg>
-            </button>
-          </li>
-          <li class="mb-2 md:mb-8">
-            <button id="travel-history" data-target-template="template-history" class="nav-button w-full flex items-center 
-            justify-between bg-emerald-900 hover:bg-emerald-950 p-2 rounded transition-transform delay-100 duration-200 
-            hover:scale-101 shadow-sm">
-              <span>Histórico</span>
-              <svg class="h-5 w-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5">
-              <use href="#icon-history"></use>
-              </svg>
-            </button>
-          </li>
-        </ul>
-      </nav>
-      <a target="_blank" rel="noopener noreferrer" href="https://github.com/helcioDuarte">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="place-self-center cursor-pointer w-6 h-6 
-        transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:text-emerald-blue hidden lg:block">
-          <use href="#icon-github"></use>
-        </svg>
-      </a>
-    </aside>
+<body class="static bg-gray-200 font-display text-shadow-sm/30 flex ">
+  <div class="m-10 h-full w-full lg:mx-auto animate-fade-in-start">
+    <div class="w-full h-full max-w-7xl space-y-6 mx-auto flex flex-col lg:flex-row lg:space-x-15 lg:px-10">
+      <aside id="sidebar" class="bg-emerald-800 sticky flex flex-col text-zinc-50 p-4 md:p-8 rounded-xl grow w-full lg:max-w-[300px] lg:max-h-[325px]">
+        <h1 class="text-2xl font-bold mb-4 place-self-center underline md:mb-6">AuthMail</h1>
+        <nav class="text-sm md:text-base">
+          <ul>
+            <li class="mb-2 md:mb-4">
+              <button id="travel-classify" data-target-template="template-classify" class="nav-button w-full flex items-center 
+              justify-between bg-emerald-900 hover:bg-emerald-950 p-2 rounded transition-transform delay-100 duration-200 
+              hover:scale-101 shadow-sm">
+                <span>Analisar E-mail</span>
+                <svg class="h-5 w-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5">
+                <use href="#icon-add"></use>
+                </svg>
+              </button>
+            </li>
+            <li class="mb-2 md:mb-4">
+              <button id="travel-triggers" data-target-template="template-triggers" class="nav-button w-full flex items-center 
+              justify-between bg-emerald-900 hover:bg-emerald-950 p-2 rounded transition-transform delay-100 duration-200 
+              hover:scale-101 shadow-sm">
+                <span>Gerenciar Triggers</span>
+                <svg class="h-5 w-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5">
+                <use href="#icon-settings"></use>
+                </svg>
+              </button>
+            </li>
+            <li class="mb-2 md:mb-8">
+              <button id="travel-history" data-target-template="template-history" class="nav-button w-full flex items-center 
+              justify-between bg-emerald-900 hover:bg-emerald-950 p-2 rounded transition-transform delay-100 duration-200 
+              hover:scale-101 shadow-sm">
+                <span>Histórico</span>
+                <svg class="h-5 w-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="1.5">
+                <use href="#icon-history"></use>
+                </svg>
+              </button>
+            </li>
+          </ul>
+        </nav>
+        <a target="_blank" rel="noopener noreferrer" href="https://github.com/helcioDuarte">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="place-self-center cursor-pointer w-6 h-6 
+          transition duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 hover:text-emerald-blue hidden lg:block">
+            <use href="#icon-github"></use>
+          </svg>
+        </a>
+      </aside>
 
-    <main id="main-content" class="text-shadow-2xs/30">
-      </main>
+      <main id="main-content" class="text-shadow-2xs/30">
+        </main>
+    </div>
   </div>
-
-<div id="history-modal-overlay" class="fixed inset-0 bg-black/60 hidden items-center justify-center">
-  <div id="history-item-modal" class="bg-white p-6 rounded-lg flex flex-col shadow-xl mx-4 text-shadow-none md:w-full md:max-w-lg">
+  <div id="history-modal-overlay" class="fixed inset-0 bg-black/60 hidden items-center justify-center">
+  <div id="history-item-modal" class="bg-white px-2 py-6 md:px-6 rounded-lg flex flex-col shadow-xl mx-4 text-shadow-none md:w-full md:max-w-lg">
     <h3 class="text-xl font-bold mb-4 text-gray-800 place-self-center">Detalhes do E-mail</h3>
     <div class="space-y-3 text-sm md:text-base max-h-96 overflow-y-auto">
       <p><span class="font-semibold">De:</span> <span id="history-sender"></span></p>
@@ -86,10 +87,10 @@
       max-w-20 text-xs md:text-sm text-center transition-transform delay-100 duration-200 hover:scale-110">Remover</button>
     </div>
   </div>
-</div>
+  </div>
 
   <div id="modal-overlay" class="fixed inset-0 bg-black/60 hidden items-center justify-center">
-    <div id="edit-trigger-modal" class="bg-white px-2 py-6 rounded-lg flex flex-col shadow-xl mx-4 text-shadow-none md:w-full md:max-w-sm">
+    <div id="edit-trigger-modal" class="bg-white px-2 py-6 md:px-6 rounded-lg flex flex-col shadow-xl mx-4 text-shadow-none md:w-full md:max-w-sm">
       <h3 class="text-xl font-bold mb-4 text-gray-800 place-self-center">Editar Trigger</h3>
       <div class="space-y-4 text-sm md:text-base place-items-center-safe">
         <div class="flex flex-col">
@@ -125,14 +126,15 @@
   </div>
 
   <template id="template-classify">
-    <div class="w-full lg:min-w-[648px] lg:object-fill mx-auto bg-white p-4 md:p-8 rounded-xl shadow-md">
+    <div class="w-full lg:min-w-[648px] lg:object-fill mx-auto bg-white p-4 md:p-8 rounded-xl shadow-md animate-fade-in-template">
       <h2 class="text-lg md:text-xl font-bold text-gray-900 mb-6 place-self-center">Analisar Novo E-mail</h2>
       <div id="email-form" class="space-y-4">
         
         <div>
           <label for="file-input-label" class="block text-sm font-medium text-gray-700 mb-1">Carregar de um arquivo (.txt, .pdf, .json):</label>
           
-          <label for="file-input" class="cursor-pointer inline-flex items-center px-4 py-2 bg-emerald-blue-light text-zinc-50 rounded-md hover:bg-emerald-blue shadow-sm">
+          <label for="file-input" class="cursor-pointer inline-flex items-center px-4 py-2 bg-emerald-blue-light 
+          text-zinc-50 rounded-md hover:bg-emerald-blue shadow-sm">
             Escolher Arquivo
           </label>
           
@@ -161,18 +163,18 @@
       </div>
       
       <div id="results" class="mt-8" style="display: none;">
-        <h3>Resultado da Análise</h3>
+        <h3 class="font-bold text-lg mb-2">Resultado da Análise</h3>
         <div>
-          <p><strong>Classificação:</strong> <span id="result-classification"></span></p>
-          <p><strong>Resposta Sugerida:</strong></p>
-          <p id="result-response"></p>
+          <p class="font-semibold mb-2">Classificação: <span id="result-classification"></span></p>
+          <p class="font-semibold mb-2">Resposta Sugerida:</p>
+          <p id="result-response" class="border p-2 rounded"></p>
         </div>
       </div>
     </div>
   </template>
 
   <template id="template-triggers">
-    <div class="w-full md:max-w-3xl lg:max-w-[648px] mx-auto bg-white p-4 md:p-8 rounded-xl shadow-md">
+    <div class="w-full md:max-w-3xl lg:max-w-[648px] mx-auto bg-white p-4 md:p-8 rounded-xl shadow-md animate-fade-in-template">
       <h2 class="text-lg md:text-xl font-bold text-gray-800 mb-6 place-self-center">Gerenciar Triggers</h2>
       <div id="trigger-form" class="space-y-4 mb-8">
         <input type="text" id="name-input" placeholder="Nome (max 16 chars)" maxlength="16" class="bg-gray-50 border
@@ -197,7 +199,7 @@
   </template>
 
   <template id="template-history">
-    <div class="w-full md:max-w-3xl lg:min-w-[648px] mx-auto bg-white p-4 md:p-8 rounded-lg shadow-md ">
+    <div class="w-full md:max-w-3xl lg:min-w-[648px] mx-auto bg-white p-4 md:p-8 rounded-lg shadow-md animate-fade-in-template">
       <h2 class="text-lg md:text-xl font-bold text-gray-800 mb-6 place-self-center">Histórico da Sessão</h2>
       <div class="p-2 rounded-xl shadow-md border border-emerald-800 text-shadow-none">
         <ul id="history-list" class="space-y-4"></ul>
@@ -230,6 +232,6 @@
   <symbol id="icon-history" viewBox="0 0 22 22">
     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
   </symbol>
-</svg>
+  </svg>
 </body>
 </html>
