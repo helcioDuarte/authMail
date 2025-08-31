@@ -19,7 +19,7 @@ unproductiveResponses = [
     "Ciente. Agradeço a mensagem."
 ]
 
-classifierPath = "./classificador_email_model"
+classifierPath = "helcioDuarte122/bert-pt-email-classifier"
 try:
     classifier = pipeline("text-classification", model=classifierPath)
     print("Modelo de classificação local carregado com sucesso!")
