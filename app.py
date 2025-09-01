@@ -10,8 +10,6 @@ def home():
 @app.route('/classify', methods=['POST'])
 def classifyEmail():
     data = request.get_json()
-    sender = data.get('sender', '')
-    subject = data.get('subject', '')
     body = data.get('body', '')
     triggers = data.get('triggers', [])
     
@@ -20,7 +18,6 @@ def classifyEmail():
 
     try:
         result = getClassificationAndSuggestion(body, triggers)
-        
         return jsonify(result)
         
     except Exception as e:
