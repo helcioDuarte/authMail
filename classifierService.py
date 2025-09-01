@@ -1,11 +1,11 @@
 import joblib
 import os
 import random
+import nltk
 nltk_data_dir = os.path.join(os.path.dirname(__file__), '.nltk_data')
 nltk.data.path.append(nltk_data_dir)
 import re
 from bs4 import BeautifulSoup
-import nltk
 from nltk.corpus import stopwords
 from nltk.stem import RSLPStemmer
 from nltk.tokenize import word_tokenize
