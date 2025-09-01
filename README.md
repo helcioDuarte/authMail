@@ -32,7 +32,7 @@ Você pode utilizar `make` para automatizar a configuração e execução.
 
 1.  Clone o repositório:
     ```bash
-    git clone [https://github.com/helcioDuarte/authMail.git](https://github.com/helcioDuarte/authMail.git)
+    git clone https://github.com/helcioDuarte/authMail.git
     cd AuthMail-Case
     ```
 
