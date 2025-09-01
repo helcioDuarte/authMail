@@ -1,0 +1,9 @@
+{
+  "from": "rh@empresa.com",
+  "subject": "FYI: Política de Férias Atualizada",
+  "body": {
+    "parts": {
+      "content": "Para conhecimento de todos,\n\nA política de férias da empresa foi atualizada. O novo documento já está disponível para consulta no Portal do Colaborador.\n\nNão é necessária nenhuma ação imediata.\n\nAtenciosamente,\nRecursos Humanos"
+    }
+  }
+}

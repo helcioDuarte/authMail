@@ -1,0 +1,9 @@
+{
+  "from": "financeiro@cliente-importante.com",
+  "subject": "Dúvida sobre fatura #7890",
+  "body": {
+    "parts": {
+      "content": "Prezados,\n\nRecebemos a fatura #7890 e notamos que o valor do serviço de consultoria está diferente do que foi acordado na proposta. \n\nPoderiam, por favor, revisar e nos enviar uma versão corrigida?\n\nAnexamos a proposta original para referência.\n\nGrato,\nCarlos Mendes"
+    }
+  }
+}
