@@ -1,6 +1,8 @@
 import joblib
 import os
 import random
+nltk_data_dir = os.path.join(os.path.dirname(__file__), '.nltk_data')
+nltk.data.path.append(nltk_data_dir)
 import re
 from bs4 import BeautifulSoup
 import nltk

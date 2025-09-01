@@ -12,3 +12,4 @@ yarn-error.log*
 train_model.py
 classificador_email_model/
 mockapi.js
+.nltk
